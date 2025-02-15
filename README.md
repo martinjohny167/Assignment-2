@@ -47,8 +47,8 @@ You can check the progress and logs of the workflow under the **Actions** tab in
 
 ### 2. Setting Up GitHub Actions:
 - In your GitHub repository, go to **Settings > Secrets** and add the following secrets:
-  - `DB_HOST`: The RDS endpoint of your instance (e.g., `database-1.cyvg56cxbepj.us-east-1.rds.amazonaws.com`).
-  - `DB_USER`: The database username (e.g., `admin`).
+  - `DB_HOST`: The RDS endpoint of your instance 
+  - `DB_USER`: The database username 
   - `DB_PASSWORD`: The password for the database.
   - `DB_NAME`: The database name (e.g., `companydb`).
   
