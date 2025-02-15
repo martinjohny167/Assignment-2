@@ -1,54 +1,47 @@
 import mysql.connector
+from mysql.connector import Error
 
-# Connection details
-db_host = 'database-1.cyvg56cxbepj.us-east-1.rds.amazonaws.com'
-db_user = 'admin'
-db_password = '12345678'
-db_name = 'companydb'
+# Database connection details
+db_host = "database-1.cyvg56cxbepj.us-east-1.rds.amazonaws.com"  # RDS endpoint
+db_user = "admin"  # Database username
+db_password = "12345678"  # Database password
+db_name = "companydb"  # Database name
 
-# SQL script to create table and add column
-create_table_sql = """
-CREATE TABLE IF NOT EXISTS projects (
-    project_id INT AUTO_INCREMENT PRIMARY KEY,
-    project_name VARCHAR(255) NOT NULL,
-    start_date DATE,
-    end_date DATE
+# SQL script to create the departments table
+sql_script = """
+CREATE TABLE IF NOT EXISTS departments (
+    department_id INT AUTO_INCREMENT PRIMARY KEY,
+    department_name VARCHAR(255) NOT NULL,
+    location VARCHAR(255) NOT NULL
 );
 """
 
-add_column_sql = """
-ALTER TABLE projects ADD COLUMN budget DECIMAL(10, 2);
-"""
+def execute_sql_script():
+    try:
+        # Establishing the connection to the database
+        connection = mysql.connector.connect(
+            host=db_host,
+            user=db_user,
+            password=db_password,
+            database=db_name
+        )
 
-# Connect to MySQL
-conn = mysql.connector.connect(
-    host=db_host,
-    user=db_user,
-    password=db_password,
-    database=db_name
-)
+        if connection.is_connected():
+            print("Connected to the database")
 
-cursor = conn.cursor()
+            cursor = connection.cursor()
+            cursor.execute(sql_script)  # Execute the SQL script
+            connection.commit()  # Commit the changes
+            print("Departments table created successfully")
 
-# Execute the CREATE TABLE statement
-try:
-    cursor.execute(create_table_sql)
-    print("Table 'projects' created or already exists.")
+    except Error as e:
+        print(f"Error: {e}")
     
-    # Check if the 'budget' column exists
-    cursor.execute("DESCRIBE projects")
-    columns = [column[0] for column in cursor.fetchall()]
-    
-    if 'budget' not in columns:
-        cursor.execute(add_column_sql)
-        print("Column 'budget' added to the 'projects' table.")
-    else:
-        print("Column 'budget' already exists.")
-    
-    conn.commit()
-    print("Database schema changes applied successfully.")
-except mysql.connector.Error as err:
-    print(f"Error: {err}")
-finally:
-    cursor.close()
-    conn.close()
+    finally:
+        if connection.is_connected():
+            cursor.close()  # Close cursor
+            connection.close()  # Close connection
+            print("Database connection closed")
+
+if __name__ == "__main__":
+    execute_sql_script()
