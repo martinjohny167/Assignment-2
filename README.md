@@ -1,6 +1,6 @@
 # Database Automation and CI/CD Pipeline 🚀
 
-## Overview 📝  
+## Overview 📝   
 
 This project automates database schema changes and implements a CI/CD pipeline for deploying changes to an **AWS RDS MySQL** database. It leverages a Python script for automating SQL operations and GitHub Actions for continuous integration and deployment.
 
